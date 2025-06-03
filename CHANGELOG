@@ -1,0 +1,370 @@
+Changelog for Dungeon Generator Assignment
+
+Version 1.0
+
+Date: 1/30/25
+
+Added:
+
+Basic dungeon generation algorithm.
+
+Simple rectangular rooms generation.
+
+Straight corridors connecting rooms.
+
+Up and down stair placement.
+
+Terminal-based dungeon rendering.
+
+Version 1.1
+
+Date: 2/1/25
+
+Changed:
+
+Fixed dungeon generation to be deterministic by introducing a fixed seed (SEED 42).
+
+Refactored dungeon grid from a simple character array to a structured Tile data type for extensibility.
+
+Introduced TileType enum for better type management (TILE_ROCK, TILE_ROOM, TILE_CORRIDOR, TILE_STAIR_UP, TILE_STAIR_DOWN).
+
+Added:
+
+Implementation of dungeon borders using +, -, and | to frame the dungeon within an 80x24 grid.
+
+Version 1.2
+
+Date: 2/3/25
+
+Changed:
+
+Modified the corridor generation algorithm to create wiggly (non-straight) paths between rooms for more natural dungeon aesthetics.
+
+Fixed:
+
+Ensured that random corridors do not overwrite room tiles.
+
+Corrected alignment issues with dungeon borders, ensuring full compatibility with the 80x24 terminal grid.
+
+Added:
+
+Placeholder empty lines to fill up the dungeon rendering to the full 24 rows.
+
+Version 1.3
+
+Date: 6/5/25
+
+Changed:
+
+Fixed dungeon generation not to be deterministic by removing a fixed seed (SEED 42).
+
+Added:
+
+Implemented dungeon save/load functionality:
+    Created a hidden directory for the game files: ~/.rlg327/.
+    Added --save and --load command-line arguments:
+        --save: Saves the dungeon to ~/.rlg327/dungeon.
+        --load: Loads an existing dungeon from ~/.rlg327/dungeon.
+    If both flags are used (--load --save), the dungeon is loaded, displayed, and saved again.
+
+Date: 2/7/25
+
+Changed:
+
+Fixed:
+
+File format improvements:
+    Implemented big-endian storage for metadata (htonl() / htons()).
+    Stored PC position separately to ensure proper spawning after loading.
+
+Added:
+    Dungeon file format header (RLG327-S2025) for validation.
+    File now saves hardness values for each tile, allowing for future modifications like dynamic terrain.
+
+Date: 2/8/25
+
+Fixed:
+Corridors not appearing after loading:
+    Modified load_dungeon() to reconstruct corridors after reading room data.
+    Called connect_rooms() after loading to ensure corridors (#) are drawn.
+
+Changed:
+    Refactored connect_rooms() to guarantee consistent path generation even after reloading.
+    Dungeon is now identical before and after saving/loading.
+
+Date: 2/9/25
+
+Added:
+Expanded dungeon serialization:
+
+    Each tile now stores both hardness and type (TILE_ROOM, TILE_CORRIDOR, etc.).
+    Rooms, corridors, and stairs are fully restored after loading.
+
+Implemented dungeon validation:
+
+    File format now includes a file version marker (currently 0).
+    Dungeon files are checked for integrity before loading.
+
+Date: 2/10/25
+
+Fixed:
+Corridor reconstruction improvements:
+
+    Fixed an issue where corridors would sometimes overwrite rooms.
+
+Date: 2/11/25
+
+Added:
+Player Character (PC) Handling:
+    PC position is now properly stored & restored.
+    Added rendering logic to display @ for the PC.
+    Ensured that PC always spawns inside a room (not inside a rock).
+
+Fixed:
+    Fixed a memory corruption bug when reading room data from a saved file.
+    Corrected stair placement after loading to ensure consistency.
+
+Made sure file works on pyrite.
+
+Date: 2/15/25
+
+Implemented Dijkstra’s algorithm for:
+Non-tunneling monsters (cannot move through rock).
+Tunneling monsters (can dig through walls).
+Created calculate_distance_maps(), dijkstra_non_tunneling(), and dijkstra_tunneling().
+Rendered distance maps for debugging purposes.
+
+Date: 2/21/25
+
+Fixed incorrect file size calculation when saving the dungeon.
+Changed from 1708 + (room_count * 4) → 1702 + (room_count * 4).
+Ensured player position is marked occupied when loading the dungeon.
+Added error handling for invalid dungeon file format.
+
+Date: 2/22/25
+
+Fixed mismatched dungeon states after loading:
+Called load_dungeon() before draw_dungeon().
+Checked that room_count is loaded correctly.
+Printed TileType values while debugging to ensure correct type assignment.
+
+Date: 2/23/25
+
+Removed redundant load_filename and save_filename variables in main().
+Ensured dungeon rendering after loading by calling draw_dungeon() in the right place.
+Fixed tile type corruption bug when saving/loading.
+Added debug statements to verify room_count and tile type correctness.
+
+Final Adjustments:
+Ensured cross-system compatibility by testing professor's code from piazza on pyrite.
+
+Date: 3/2/25
+
+Added:
+Implemented event-driven game loop:
+    Created event queue to manage turns for PC and monsters.
+    Added functions to handle PC and monster movements based on events.
+    Ensured proper re-enqueueing of events after each turn.
+
+Fixed:
+Corrected monster movement logic to handle different characteristics (erratic, tunneling, telepathic, intelligent).
+Ensured PC and monsters are correctly initialized and placed in the dungeon.
+Fixed issues with event queue handling to ensure smooth gameplay.
+
+Version 1.04
+Date: 3/15/25
+Added:
+
+Turn-based, event-driven game loop for the PC and monsters
+
+Basic player (@) and monster movement using ncurses
+
+Dijkstra’s algorithm for both tunneling and non-tunneling monsters
+
+Fixed:
+
+PC always spawns in a room
+
+Monster movement logic refinements
+
+Version 1.05
+Date: 3/20/25
+Added:
+
+Fully functional stairs—press < or > (based on the underlying base map) to change levels
+
+Fog-of-war: only the area around the PC (5×5) is visible; what’s seen is remembered
+
+Teleport mode: press g to target (with movement keys or r for a random valid target) and teleport (allowed into tunnelable rock, not immutable rock)
+
+Fog toggle: press f to switch between full view and fog
+
+Fixed:
+
+Stair detection after teleporting (using the base map instead of the live dungeon)
+
+Event queue reinitialization upon level transitions to avoid premature game termination
+
+
+Version 1.06
+Date: 4/04/25
+
+Added:
+
+Monster parsing from $HOME/.rlg327/monster_desc.txt via --parse flag.
+
+TA-compliant parser output with support for all required fields and dice expressions.
+
+Integrated monster templates into dungeon generation with rarity-based selection.
+
+Monster behavior flags (SMART, TELE, TUNNEL, ERRATIC) parsed and applied.
+
+Color rendering for monsters based on template color; PC rendered in white-on-blue.
+
+Fixed:
+
+Graceful handling of missing or invalid monster files.
+
+Version 1.7 — 4/08/25
+Added:
+
+Monster parsing from $HOME/.rlg327/monster_desc.txt
+
+CLI flag --parse for template-only display
+
+All required monster fields and dice parsing
+
+Rarity-based monster instancing
+
+Colorized rendering for monsters
+
+Template behavior flags: SMART, TELE, TUNNEL, ERRATIC
+
+Fixed:
+
+Handling missing or invalid monster description files
+
+Version 1.8 — 4/16/25
+Added:
+
+Object template parsing from $HOME/.rlg327/object_desc.txt
+
+Factory method in ObjectTemplate to generate ObjectInstance
+
+Rolled stats on instancing (all dice fields except damage)
+
+Object placement on floor tiles ('.') with avoidance of PC, monsters, other objects
+
+Artifact enforcement: no duplicates; stored in seen_artifacts
+
+Object rendering with proper symbol and ncurses color
+
+Dungeon remembers and re-renders objects after PC walks over them
+
+Level transitions clear objects but retain artifact memory
+
+Debug logs:
+
+Loaded object and monster template counts
+
+Number of placed objects
+
+Fixed:
+
+Removed per-object debug spam
+
+Ensured object rendering respects fog-of-war logic
+
+
+Version 1.09
+Date: 4/22/25
+Added:
+
+Inventory and Equipment System:
+
+Implemented 10-slot carry inventory (keys 0–9)
+
+Implemented 12-slot equipment system (slots a–l) for types like WEAPON, ARMOR, RING, etc.
+
+Equipped items contribute to damage and speed stats
+
+PC Item Interaction:
+
+w: Wear item from inventory into appropriate equipment slot
+
+t: Take off equipped item and move to inventory
+
+d: Drop carried item onto dungeon floor
+
+x: Expunge item from inventory permanently
+
+Items can be picked up automatically by walking over them
+
+Inventory Interface and Inspection:
+
+i: View all inventory slots and item names
+
+e: View equipped items and their assigned slots
+
+I: Inspect inventory item to view description
+
+Combat System Overhaul:
+
+All attacks now deal damage using dice rolls (e.g. 2+1d6)
+
+PC attacks with unarmed damage and bonus damage from all equipped items
+
+Monsters attack with their template damage dice
+
+All attacks always hit (no miss/fail chance)
+
+Characters only die if HP ≤ 0
+
+Monster death removes the monster from the dungeon
+
+PC death ends the game with "You lose" message
+
+Boss monster kills (e.g., SpongeBob) can optionally trigger a win condition
+
+Monster Look Mode (L):
+
+Press L to enter targeting mode (like teleport)
+
+Move the cursor using direction keys
+
+Press t to inspect a visible monster's stats
+
+Press ESC to exit look mode
+
+Fixed:
+
+Corrected PC-movement logic to allow attacking a monster by attempting to move into its tile
+
+Prevented player from walking through or overwriting living monsters
+
+Fixed fog and base map logic to show dropped objects only when visible
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+self project (Assignment 1.10/2)
+
+Features Implemented:
+
+Ranged combat mode ('t' key): Fires a projectile toward a target monster.
+
+Poison Ball spell ('p' key): Casts a poison explosion damaging all monsters in a radius.
+
+Fireball spell ('F' key): Casts a powerful fire explosion at a smaller radius.
+
+Mana system: Spells cost mana which doesn't allow them to cast poison ball recursively, regenerates 1 mana every 5 turns. Each spell consumes 5 mana (Max: 20)
+
+Animated projectile and explosion effects using ncurses.
+
+Dynamic messages showing player mana.
+
+
+
+Author: Hrishikesh
+
+Course: COM S 3270, Spring 2025
+
