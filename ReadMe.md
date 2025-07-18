@@ -1,75 +1,111 @@
-Roguelike Dungeon Generator
-This is a simple C++ roguelike dungeon generator that creates random dungeons with rooms, corridors, stairs, fog-of-war, and teleporting. It uses ncurses for a cool terminal UI and lets you save/load your dungeon state.
+# Roguelike Dungeon Generator (C++)
 
-Features
-Random dungeon generation (rooms, corridors, stairs)
+A terminal-based roguelike game built in modern **C++**, featuring **procedural dungeon generation**, **fog-of-war**, **turn-based combat**, and **teleportation mechanics**. Uses **ncurses** for a retro terminal UI and supports saving/loading dungeons via command-line options.
 
-Fog-of-war: you only see what’s near your PC
+---
 
-Teleport mode: press g to target a new spot and teleport (or pick a random target with r)
+## Features
 
-Turn-based gameplay with an event queue
+- Random dungeon generation: rooms, corridors, staircases
+- Fog-of-war: visibility limited to nearby tiles
+- Turn-based gameplay with an event queue system
+- Save and load dungeon state from disk `~/.rlg327`
+- Create your own monster definitions! Saved and loaded from custom `~/.rlg327/monster_desc.txt` descriptors
+- Create your own object definitions! Saved and loaded from custom `~/.rlg327/object_desc.txt` descriptors
+- Special features: teleportation, ranged attacks, magic spells, and equipment management
 
-Save/load dungeon state via command-line options
+---
 
-Controls
-Movement: 7/8/9/4/6/1/2/3 or y/k/u/h/l/b/j/n
+## Controls
 
-Stairs: > to go down, < to go up (only works when you’re on stairs)
+| Key                     | Action                                  |
+|-------------------------|-----------------------------------------|
+| `7/8/9/4/6/1/2/3`       | Move (numeric pad or y/k/u/h/l/b/j/n)   |
+| `5`, `.`, `Space`       | Rest / Skip turn                        |
+| `<`, `>`                | Ascend/Descend stairs (on stair tiles)  |
+| `f`                     | Toggle fog of war                       |
+| `g`                     | Enter teleport mode                     |
+| `r`                     | Random teleport target (while in mode)  |
+| `m`                     | View visible monsters                   |
+| `L`                     | Look mode (inspect)                     |
+| `i`                     | Show inventory                          |
+| `e`                     | Show equipment                          |
+| `I`                     | Inspect inventory item                  |
+| `w`                     | Wear item                               |
+| `t`                     | Take off equipment                      |
+| `d`                     | Drop item                               |
+| `a`                     | Enter ranged attack mode (`f` to fire) |
+| `p`                     | Cast Poison Ball                        |
+| `F`                     | Cast Fireball                           |
+| `Q`                     | Quit the game                           |
 
-Rest: 5, . or space
+---
 
-Toggle fog: f
+## Usage
 
-Teleport: g to enter teleport mode; use movement keys or r for a random target; press g again to confirm
+### Compile
 
-Monster list: m
-
-Quit: Q
-
-Usage: 
-Compile with:
+```bash
 make
+````
 
+### Run
 
-Run with:
+```bash
 ./dungeon
+```
 
+### Save
 
-To save, run:
+```bash
 ./dungeon --save
+```
 
+### Load
 
-To load, run:
+```bash
 ./dungeon --load
+```
 
+### Parse Monster Descriptions
 
-To parse monster desc:
+```bash
 ./dungeon --parse
-(make sure there's content in ~/.rlg327/monster_desc.txt in a correct format)
+```
+
+> Ensure the following files exist with valid content:
+>
+> * `~/.rlg327/monster_desc.txt`
+> * `~/.rlg327/object_desc.txt`
+
+---
+
+## Screenshots
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/8177f825-c4d9-4917-9e53-ab0e4e7fcf66" width="600" alt="Dungeon View"/>
+  <img src="https://github.com/user-attachments/assets/9980f501-5359-4214-8b03-690e21a85b54" width="450" alt="Monster List"/>
+  <img src="https://github.com/user-attachments/assets/e6b2e63a-d97e-4b21-a8af-1d0975f4d53b" width="250" alt="Teleportation"/>
+  <img src="https://github.com/user-attachments/assets/3f905cbe-5836-4602-a48f-346186ded782" width="800" alt="Gameplay"/>
+  <img src="https://github.com/user-attachments/assets/41ebda2c-fea2-480c-8e13-16a7f8ed5a96" width="500" alt="Save Game"/>
+
+https://github.com/user-attachments/assets/7689e3df-9ac0-4082-a926-9071bf435735
 
 
-Ensure ~/.rlg327/object_desc.txt exists and contains valid Monster definitions.
-Ensure ~/.rlg327/object_desc.txt exists and contains valid object definitions.
+</p>
+
+---
+
+## License
+
+MIT License — feel free to use, modify, or expand this project for personal or academic use.
+
+---
+
+## Author
+
+Built by [Hrishikesh Uchake](https://github.com/HrishikeshUchake)
 
 
-Key | Action
-7/8/9/4/6/1/2/3 or y/k/u/h/l/b/j/n | Move in 8 directions
-5, ., or Space | Rest (skip turn)
-< / > | Go up/down stairs (when on stair tile)
-f | Toggle fog of war
-g | Enter teleport mode → move to target and press g again to confirm
-r | Random teleport target (while in teleport mode)
-m | Show monster list and their relative positions
-Q | Quit the game
-m | Show visible monsters 
-L | Look mode to inspect monsters 
-i | Show inventory 
-e | Show equipment 
-I | Inspect inventory item 
-w | Wear item 
-t | Take off equipment 
-d | Drop item 
-a | Enter ranged attack mode (target and fire with f)
-p | Cast Poison Ball spell (area of effect magic attack)
-F | Cast Fireball spell (powerful area magic attack)
+
+
