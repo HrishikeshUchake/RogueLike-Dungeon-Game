@@ -13,7 +13,7 @@ A terminal-based roguelike game built in modern **C++**, featuring **procedural 
 - Create your own monster definitions! Saved and loaded from custom `~/.rlg327/monster_desc.txt` descriptors
 - Create your own object definitions! Saved and loaded from custom `~/.rlg327/object_desc.txt` descriptors
 - Special features: teleportation, ranged attacks, magic spells, and equipment management
-
+- Has a CHANGELOG file to track new version releases.
 ---
 
 ## Controls
